@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'includes/security.php';
 require_once 'includes/db_connect.php'; 
 
 $stmt = $pdo->query("SELECT * FROM items ORDER BY created_at DESC");
@@ -79,7 +79,7 @@ $items = $stmt->fetchAll();
                 const category = card.querySelector('.item-category').innerText;
                 const matchesSearch = title.includes(searchText);
                 const matchesCategory = selectedCategory === "All" || category === selectedCategory;
-                card.style.display = (matchesSearch && matchesCategory) ? "block" : "none";
+                card.style.style.display = (matchesSearch && matchesCategory) ? "block" : "none";
             });
         }
         searchInput.addEventListener('keyup', filterItems);
