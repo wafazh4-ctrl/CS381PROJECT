@@ -1,28 +1,30 @@
 <?php
-session_start();
+require_once 'includes/security.php';
 require_once 'includes/db_connect.php'; 
 
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $fullname = $_POST['fullname'];
-    $university_id = $_POST['id'];
-    $email = $_POST['email'];
-    $password = $_POST['password']; 
-    $role = $_POST['role'];
+    if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed.");
+    }
 
-    // تشفير كلمة المرور (أساسي لـ Phase 3)
+    $fullname      = test_input($_POST['fullname']);
+    $university_id = test_input($_POST['id']);
+    $email         = test_input($_POST['email']);
+    $password      = $_POST['password']; 
+    $role          = test_input($_POST['role']);
+
+    
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     try {
-        // التحقق من عدم تكرار الإيميل
         $check = $pdo->prepare("SELECT email FROM users WHERE email = ?");
         $check->execute([$email]);
 
         if ($check->rowCount() > 0) {
             $message = "<p style='color:red; text-align:center;'>This email is already registered!</p>";
         } else {
-            // إدخال البيانات باستخدام PDO
             $sql = "INSERT INTO users (fullname, university_id, email, password, role) VALUES (?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             
@@ -32,9 +34,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
     } catch (PDOException $e) {
-        $message = "<p style='color:red; text-align:center;'>Error: " . $e->getMessage() . "</p>";
+        $message = "<p style='color:red; text-align:center;'>An error occurred during registration.</p>";
     }
 }
+
+$csrf_token = generate_csrf_token();
 ?>
 
 <!DOCTYPE html>
@@ -65,6 +69,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h2>Create New Account</h2>
         <?php echo $message; ?>
         <form class="auth-form" action="register.php" method="POST">
+            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+            
             <div class="form-group">
                 <label for="fullname">Full Name</label>
                 <input type="text" id="fullname" name="fullname" required>
