@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'includes/security.php';
 require_once 'includes/db_connect.php'; 
 
 if (!isset($_SESSION['user_email'])) {
@@ -10,17 +10,20 @@ if (!isset($_SESSION['user_email'])) {
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $item_name   = $_POST['item_name'];
-    $category    = $_POST['category']; 
-    $status      = strtoupper($_POST['item_type']); 
-    $description = $_POST['description'];
+    if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed.");
+    }
+
+    $item_name   = test_input($_POST['item_name']);
+    $category    = test_input($_POST['category']); 
+    $status      = strtoupper(test_input($_POST['item_type'])); 
+    $description = test_input($_POST['description']);
     $date_posted = date('Y-m-d');
     
     $user_name   = $_SESSION['user_fullname'] ?? 'User'; 
     $u_id_display = $_SESSION['university_id'] ?? 'N/A';
 
     try {
-
         $sql = "INSERT INTO items (item_name, category, description, status, date_posted, user_name, university_id_display) 
                 VALUES (?, ?, ?, ?, ?, ?, ?)";
         
@@ -32,6 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = "error";
     }
 }
+
+$csrf_token = generate_csrf_token();
 ?>
 
 <!DOCTYPE html>
@@ -68,6 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
 
         <form action="report_item.php" method="POST">
+            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
             
             <div class="form-group">
                 <label for="item_name">Item Name</label>
@@ -97,12 +103,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <textarea id="description" name="description" placeholder="color, brand, distinct features..." minlength="10" required></textarea>
             </div>
 
-            <button type="submit" class="submit-btn" style="background-color: var(--primary-purple); color: white; padding: 12px; width: 100%; border: none; border-radius: 8px; cursor: pointer; font-size: 16px;">
-                Submit Report
-            </button>
-
+            <button type="submit" class="submit-btn">Submit Report</button>
         </form>
     </main>
-
-    </body>
+</body>
 </html>
