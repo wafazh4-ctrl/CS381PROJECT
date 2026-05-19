@@ -21,8 +21,8 @@ CS381Project/
 ├── login.php
 ├── logout.php
 ├── register.php
-├── report_item.php
-└── README.md
+└──report_item.php
+ 
 
 Implemented Security Controls
 SQL Injection Prevention: Handled via PDO Prepared Statements and strict input parameter binding.
@@ -34,7 +34,7 @@ Cross-Site Request Forgery (CSRF) Mitigation: Enforced via the Synchronizer Toke
 Session and Cookie Hardening: Secured via runtime initialization configurations (HttpOnly, SameSite=Strict) and automated session ID regeneration upon verification.
 
 Deployment Steps
-Move the complete project directory into your local server root folder (e.g., Laragon www or XAMPP htdocs).
+Move the complete project directory into your local server root folder (e.g., Laragon www).
 
 Create a local database named yic_found_db using phpMyAdmin.
 
