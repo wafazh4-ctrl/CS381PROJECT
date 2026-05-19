@@ -3,6 +3,13 @@
 ## Project Overview
 YIC Found is a web-based portal developed for Yanbu Industrial College (YIC) to manage on-campus lost and found entries. The system is engineered entirely using native PHP (PDO), HTML5, CSS3, and JavaScript, strictly adhering to the course policy prohibiting external frameworks or libraries.
 
+## 🎥 Project Video Walkthrough
+You can watch our full 5-minute project demonstration, system flow, and security countermeasures breakdown here:
+
+[Watch the Video Walkthrough](https://drive.google.com/file/d/1QkmTD6rQF8Wp4mtuBdc1Vkq5mOlBK3a_/view?usp=drivesdk)
+
+
+
 ## System Architecture
 ```text
 CS381Project/
