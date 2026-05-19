@@ -31,29 +31,27 @@ CS381Project/
 └──report_item.php
  
 
-Implemented Security Controls
-SQL Injection Prevention: Handled via PDO Prepared Statements and strict input parameter binding.
+## 🔒 Implemented Security Controls
 
-Cross-Site Scripting (XSS) Defense: Output contextual sanitization implemented globally via custom data scrubbing functions and htmlspecialchars.
+* **SQL Injection Prevention:** Handled via PDO Prepared Statements and strict input parameter binding across all database queries.
+* **Cross-Site Scripting (XSS) Defense:** Output contextual sanitization implemented globally via custom data scrubbing functions and `htmlspecialchars()`.
+* **Cross-Site Request Forgery (CSRF) Mitigation:** Enforced via the *Synchronizer Token Pattern* on all state-changing POST forms.
+* **Session and Cookie Hardening:** Secured via runtime initialization configurations (`HttpOnly`, `SameSite=Strict`) and automated session ID regeneration upon verification.
 
-Cross-Site Request Forgery (CSRF) Mitigation: Enforced via the Synchronizer Token Pattern on all state-changing POST forms.
+---
 
-Session and Cookie Hardening: Secured via runtime initialization configurations (HttpOnly, SameSite=Strict) and automated session ID regeneration upon verification.
+## 🚀 Deployment Steps
 
-Deployment Steps
-Move the complete project directory into your local server root folder (e.g., Laragon www).
+1. Move the complete project directory into your local server root folder (e.g., Laragon `www`).
+2. Create a local database named `yic_found_db` using phpMyAdmin or HeidiSQL.
+3. Import the database schema file `yic_found_db.sql` into the newly created database.
+4. Verify server configuration parameters inside `includes/db_connect.php`.
+5. Access the application homepage via: `http://localhost/CS381Project/index.php`
 
-Create a local database named yic_found_db using phpMyAdmin.
+---
 
-Import the database schema file yic_found_db.sql into the newly created database.
-
-Verify server configuration parameters inside includes/db_connect.php.
-
-Access the application homepage via: http://localhost/CS381Project/index.php
-
-Testing Accounts
+## 👥 Testing Accounts
 The imported database includes pre-configured records for functional testing:
 
-Admin Role: admin@yic.edu.sa
-
-Student Role: jana@yic.edu.sa
+* **Admin Role:** `admin@yic.edu.sa`
+* **Student Role:** `jana@yic.edu.sa`
