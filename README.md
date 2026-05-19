@@ -29,7 +29,7 @@ CS381Project/
 ├── logout.php
 ├── register.php
 └──report_item.php
-
+```
 ---
 
 ## 🔒 Implemented Security Controls
