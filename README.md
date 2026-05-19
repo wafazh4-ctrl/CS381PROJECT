@@ -29,11 +29,12 @@ CS381Project/
 ├── logout.php
 ├── register.php
 └──report_item.php
- 
+
+---
 
 ## 🔒 Implemented Security Controls
 
-* **SQL Injection Prevention:** Handled via PDO Prepared Statements and strict input parameter binding across all database queries.
+* **SQL Injection Prevention:** Handled via PDO Prepared Statements and strict input parameter binding.
 * **Cross-Site Scripting (XSS) Defense:** Output contextual sanitization implemented globally via custom data scrubbing functions and `htmlspecialchars()`.
 * **Cross-Site Request Forgery (CSRF) Mitigation:** Enforced via the *Synchronizer Token Pattern* on all state-changing POST forms.
 * **Session and Cookie Hardening:** Secured via runtime initialization configurations (`HttpOnly`, `SameSite=Strict`) and automated session ID regeneration upon verification.
@@ -55,3 +56,5 @@ The imported database includes pre-configured records for functional testing:
 
 * **Admin Role:** `admin@yic.edu.sa`
 * **Student Role:** `jana@yic.edu.sa`
+ 
+
