@@ -1,9 +1,9 @@
 <?php
-session_start();
+require_once 'includes/security.php';
 require_once 'includes/db_connect.php';
 
 if (!isset($_GET['id'])) { header("Location: browse.php"); exit(); }
-$item_id = $_GET['id'];
+$item_id = test_input($_GET['id']);
 
 $stmt = $pdo->prepare("SELECT * FROM items WHERE id = ?");
 $stmt->execute([$item_id]);
@@ -43,11 +43,14 @@ if (!$item) { die("Item not found!"); }
                 <?php echo $item['status']; ?>
             </span>
             <table class="details-table" style="margin-top:20px;">
-                <tr><td>Category:</td><td><?php echo htmlspecialchars($item['category']); ?></td></tr>
-                <tr><td>Description:</td><td><?php echo htmlspecialchars($item['description']); ?></td></tr>
-                <tr><td>Posted By:</td><td><?php echo htmlspecialchars($item['user_name']); ?></td></tr>
-                <tr><td>Date:</td><td><?php echo date('d/m/Y', strtotime($item['date_posted'])); ?></td></tr>
+                <tr><td class="label-cell">Category:</td><td class="value-cell"><?php echo htmlspecialchars($item['category']); ?></td></tr>
+                <tr><td class="label-cell">Description:</td><td class="value-cell"><?php echo htmlspecialchars($item['description']); ?></td></tr>
+                <tr><td class="label-cell">Posted By:</td><td class="value-cell"><?php echo htmlspecialchars($item['user_name']); ?></td></tr>
+                <tr><td class="label-cell">Date:</td><td class="value-cell"><?php echo date('d/m/Y', strtotime($item['date_posted'])); ?></td></tr>
             </table>
+            <div class="back-btn-container">
+                 <a href="browse.php" class="view-details-btn" style="display:inline-block; padding: 10px 30px;">Back to Browse</a>
+            </div>
         </div>
     </main>
 </body>
