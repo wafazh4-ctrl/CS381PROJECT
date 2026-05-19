@@ -1,13 +1,15 @@
 <?php
-
-session_start();
-
+require_once 'includes/security.php';
 require_once 'includes/db_connect.php'; 
 
 $error_msg = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
+    if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed.");
+    }
+
+    $email = test_input($_POST['email']);
     $password = $_POST['password'];
 
     try {
@@ -17,11 +19,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($user && password_verify($password, $user['password'])) {
             
+         
+            session_regenerate_id(true);
+            
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_role'] = $user['role'];
             $_SESSION['user_fullname'] = $user['fullname'];
             $_SESSION['university_id'] = $user['university_id']; 
+            $_SESSION['logged_in'] = true;
 
             if ($user['role'] === 'admin') {
                 header("Location: admin_dashboard.php");
@@ -33,9 +39,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error_msg = "Invalid email or password!";
         }
     } catch (PDOException $e) {
-        $error_msg = "Database error: " . $e->getMessage();
+        $error_msg = "Login failed due to a system error.";
     }
 }
+
+$csrf_token = generate_csrf_token();
 ?>
 
 <!DOCTYPE html>
@@ -71,19 +79,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
         
         <form class="auth-form" action="login.php" method="POST">
+            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+
             <div class="form-group">
                 <label for="email">University Email</label>
                 <input type="email" id="email" name="email" placeholder="@yic.edu.sa" required>
             </div>
-
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
 
-            <button type="submit" class="auth-btn" style="background-color: var(--primary-purple); color: white; padding: 12px; width: 100%; border: none; border-radius: 8px; cursor: pointer;">
-                Login
-            </button>
+            <button type="submit" class="auth-btn">Login</button>
             
             <div class="auth-footer">
                 <a href="#">Forgot Password?</a>
@@ -91,6 +98,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </form>
     </main>
-
 </body>
 </html>
